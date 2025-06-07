@@ -1,3 +1,4 @@
+import { data } from "react-router";
 import { z } from "zod";
 
 export const signInSchema = z.object({
@@ -16,3 +17,21 @@ export const signUpSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, "New Password must be atleast 8 characters long"),
+    confirmPassword: z
+      .string()
+      .min(8, "Password must be atleast 8 characters long"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
