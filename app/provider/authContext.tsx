@@ -1,11 +1,14 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "@/types";
+import { queryClient } from "./reactQueryProvider";
+import { useLocation, useNavigate } from "react-router";
+import { publicRoutes } from "@/lib";
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (data: any) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -16,20 +19,61 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const login = async (email: string, password: string) => {
-    console.log(email, password);
+  const navigate = useNavigate();
+  const currentPath = useLocation().pathname;
+  const isPublicRoute = publicRoutes.includes(currentPath);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      setIsLoading(true);
+
+      const userInfo = localStorage.getItem("user");
+
+      if (userInfo) {
+        setUser(JSON.parse(userInfo));
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        if (!isPublicRoute) {
+          navigate("/sign-in");
+        }
+      }
+      setIsLoading(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleLogout = () => {
+      logout();
+      navigate("/sign-in");
+    };
+    window.addEventListener("force-logout", handleLogout);
+    return () => window.removeEventListener("force-logout", handleLogout);
+  }, []);
+
+  const login = async (data: any) => {
+    localStorage.setItem("token", JSON.stringify(data.token));
+    setUser(data.user);
+    setIsAuthenticated(true);
+    setIsLoading(false);
+    console.log("Login successful", data);
   };
 
   const logout = async () => {
     console.log("Logging out");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/sign-in");
+
+    setUser(null);
+    setIsAuthenticated(false);
+    setIsLoading(false);
+    queryClient.clear();
+    console.log("Logout successful");
   };
 
   const values = { user, isAuthenticated, isLoading, login, logout };
-  return (
-    <AuthContext.Provider value={values}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
