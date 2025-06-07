@@ -6,12 +6,12 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-  layout("routes/auth/auth-layout.tsx", [
+  layout("routes/auth/authLayout.tsx", [
     index("routes/root/home.tsx"),
-    route("sign-in", "routes/auth/sign-in.tsx"),
-    route("sign-up", "routes/auth/sign-up.tsx"),
-    route("forgot-password", "routes/auth/forgot-password.tsx"),
-    route("reset-password", "routes/auth/reset-password.tsx"),
-    route("verify-email", "routes/auth/verify-email.tsx"),
+    route("sign-in", "routes/auth/signIn.tsx"),
+    route("sign-up", "routes/auth/signUp.tsx"),
+    route("forgot-password", "routes/auth/forgotPassword.tsx"),
+    route("reset-password", "routes/auth/resetPassword.tsx"),
+    route("verify-email", "routes/auth/verifyEmail.tsx"),
   ]),
 ] satisfies RouteConfig;
