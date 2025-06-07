@@ -45,7 +45,7 @@ const SignIn = () => {
           <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">Sign in to your account to continue</CardDescription>
         </CardHeader>
-        <CardContent className="text-center">
+        <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleOnSubmit)} className="space-y-6">
               <FormField
