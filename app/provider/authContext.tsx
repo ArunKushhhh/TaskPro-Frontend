@@ -26,20 +26,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       setIsLoading(true);
+      try {
+        const storedUser = localStorage.getItem("user");
 
-      const userInfo = localStorage.getItem("user");
-
-      if (userInfo) {
-        setUser(JSON.parse(userInfo));
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        if (!isPublicRoute) {
-          navigate("/sign-in");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+          setIsAuthenticated(true);
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+          if (!isPublicRoute) {
+            navigate("/sign-in");
+          }
         }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
+
+    checkAuth();
   }, []);
 
   useEffect(() => {
@@ -52,7 +59,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = async (data: any) => {
-    localStorage.setItem("token", JSON.stringify(data.token));
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.token));
     setUser(data.user);
     setIsAuthenticated(true);
     setIsLoading(false);
