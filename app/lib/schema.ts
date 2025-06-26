@@ -1,3 +1,4 @@
+import { ProjectStatus } from "@/types";
 import { data } from "react-router";
 import { z } from "zod";
 
@@ -40,4 +41,21 @@ export const workspaceSchema = z.object({
   name: z.string().min(1, "Name is required"),
   color: z.string().min(1, "Color is required"),
   description: z.string().optional(),
+});
+
+export const projectSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z.string().optional(),
+  status: z.nativeEnum(ProjectStatus),
+  startDate: z.string().min(1, "Start Date is required"),
+  dueDate: z.string().min(1, "Due Date is required"),
+  members: z
+    .array(
+      z.object({
+        user: z.string(),
+        role: z.enum(["manager", "conributor", "viewer"]),
+      })
+    )
+    .optional(),
+  tags: z.string().optional(),
 });
