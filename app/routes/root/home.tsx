@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Trelloq" },
+    { title: "TaskPro" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }

@@ -20,7 +20,7 @@ interface ProjectCardProps {
 }
 const ProjectCard = ({ project, progress, workspaceId }: ProjectCardProps) => {
   return (
-    <Link to={`/workspace/${workspaceId}/projects/${project._id}`}>
+    <Link to={`/workspaces/${workspaceId}/projects/${project._id}`}>
       <Card className="transition-all duration-300 hover:shadow-md hover:-translate-y-1">
         <CardHeader>
           <div className="flex items-center justify-between">
