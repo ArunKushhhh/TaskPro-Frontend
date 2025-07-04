@@ -100,3 +100,56 @@ export interface MembersProps {
   role: "admin" | "member" | "owner" | "viewer";
   joinedAt: Date;
 }
+
+export type ResourceType =
+  | "Task"
+  | "Project"
+  | "Workspace"
+  | "Comment"
+  | "User";
+
+export type ActionType =
+  | "created_task"
+  | "updated_task"
+  | "created_subtask"
+  | "updated_subtask"
+  | "completed_task"
+  | "created_project"
+  | "updated_project"
+  | "completed_project"
+  | "created_workspace"
+  | "updated_workspace"
+  | "added_comment"
+  | "added_member"
+  | "removed_member"
+  | "joined_workspace"
+  | "added_attachment";
+
+export interface ActivityLog {
+  _id: string;
+  user: User;
+  action: ActionType;
+  resourceType: ResourceType;
+  resourceId: string;
+  details: any;
+  createdAt: Date;
+}
+
+export interface CommentReaction {
+  emoji: string;
+  user: User;
+}
+
+export interface Comment {
+  _id: string;
+  author: User;
+  text: string;
+  createdAt: Date;
+  reactions?: CommentReaction[];
+  attachments?: {
+    fileName: string;
+    fileUrl: string;
+    fileType?: string;
+    fileSize?: number;
+  }[];
+}
