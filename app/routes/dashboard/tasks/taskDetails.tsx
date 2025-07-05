@@ -11,12 +11,17 @@ import TaskTitle from "@/components/task/taskTitle";
 import Watchers from "@/components/task/watchers";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useTaskByIdQuery } from "@/hooks/useTask";
+import {
+  useArchivedTaskMutation,
+  useTaskByIdQuery,
+  useWatchTaskMutation,
+} from "@/hooks/useTask";
 import { useAuth } from "@/provider/authContext";
 import type { Project, Task } from "@/types";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 const TaskDetails = () => {
   const { user } = useAuth();
@@ -36,6 +41,10 @@ const TaskDetails = () => {
     };
     isLoading: boolean;
   };
+
+  const { mutate: watchTask, isPending: isWatching } = useWatchTaskMutation();
+  const { mutate: archivedTask, isPending: isArchived } =
+    useArchivedTaskMutation();
 
   if (isLoading)
     return (
@@ -60,9 +69,33 @@ const TaskDetails = () => {
 
   const members = task?.assignees || [];
 
-  const handleWatchTask = () => {};
+  const handleWatchTask = () => {
+    watchTask(
+      { taskId: task._id },
+      {
+        onSuccess: () => {
+          toast.success("Task watched");
+        },
+        onError: () => {
+          toast.error("Failed to watch task");
+        },
+      }
+    );
+  };
 
-  const handleArchivedTask = () => {};
+  const handleArchivedTask = () => {
+    archivedTask(
+      { taskId: task._id },
+      {
+        onSuccess: () => {
+          toast.success("Task archived");
+        },
+        onError: () => {
+          toast.error("Failed to archive task");
+        },
+      }
+    );
+  };
 
   return (
     <div className="container mx-auto p-0 py-4 md:px-4">
@@ -83,6 +116,7 @@ const TaskDetails = () => {
             size={"sm"}
             onClick={handleWatchTask}
             className="w-fit"
+            disabled={isWatching}
           >
             {isUserWatching ? (
               <>
@@ -102,6 +136,7 @@ const TaskDetails = () => {
             size={"sm"}
             onClick={handleArchivedTask}
             className="w-fit"
+            disabled={isArchived}
           >
             {task.isArchived ? "Unarchive" : "Archive"}
           </Button>
