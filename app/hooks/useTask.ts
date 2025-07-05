@@ -177,3 +177,37 @@ export const useAddCommentMutation = () => {
     },
   });
 };
+
+export const useWatchTaskMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { taskId: string }) =>
+      postData(`/tasks/${data.taskId}/watch`, {}),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", data._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["task-activity", data._id],
+      });
+    },
+  });
+};
+
+export const useArchivedTaskMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { taskId: string }) =>
+      postData(`/tasks/${data.taskId}/archived`, {}),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", data._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["task-activity", data._id],
+      });
+    },
+  });
+};
