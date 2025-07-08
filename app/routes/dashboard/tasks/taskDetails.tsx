@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   useArchivedTaskMutation,
+  useDeleteTaskMutation,
   useTaskByIdQuery,
   useWatchTaskMutation,
 } from "@/hooks/useTask";
@@ -45,6 +46,7 @@ const TaskDetails = () => {
   const { mutate: watchTask, isPending: isWatching } = useWatchTaskMutation();
   const { mutate: archivedTask, isPending: isArchived } =
     useArchivedTaskMutation();
+  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTaskMutation();
 
   if (isLoading)
     return (
@@ -92,6 +94,21 @@ const TaskDetails = () => {
         },
         onError: () => {
           toast.error("Failed to archive task");
+        },
+      }
+    );
+  };
+
+  const handleDeleteTask = () => {
+    deleteTask(
+      { taskId: task._id },
+      {
+        onSuccess: () => {
+          toast.success("Task deleted");
+          navigate(-1);
+        },
+        onError: () => {
+          toast.error("Failed to delete task");
         },
       }
     );
@@ -177,10 +194,11 @@ const TaskDetails = () => {
                 <Button
                   variant={"destructive"}
                   size={"sm"}
-                  onClick={() => {}}
+                  onClick={handleDeleteTask}
                   className="hidden md:block"
+                  disabled={isDeleting}
                 >
-                  Delete Task
+                  {isDeleting ? "Deleting..." : "Delete Task"}
                 </Button>
               </div>
             </div>
