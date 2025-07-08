@@ -1,6 +1,5 @@
 import type { CreateTaskFormData } from "@/components/task/createTaskDialog";
-import { fetchData, postData, updateData } from "@/lib/fetchUtil";
-import { queryClient } from "@/provider/reactQueryProvider";
+import { deleteData, fetchData, postData, updateData } from "@/lib/fetchUtil";
 import type { TaskPriority, TaskStatus } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -211,3 +210,20 @@ export const useArchivedTaskMutation = () => {
     },
   });
 };
+
+export const useDeleteTaskMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { taskId: string }) =>
+      deleteData(`/tasks/${data.taskId}/delete`),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", data._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["task-activity", data._id],
+      });
+    },
+  });
+}
