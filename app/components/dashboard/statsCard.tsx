@@ -11,7 +11,7 @@ const StatsCard = ({ data }: { data: StatsCardProps }) => {
         <CardContent>
           <div className="text-2xl font-bold">{data.totalProjects}</div>
           <p className="text-sm font-medium">
-            In progress: {data.totalProjectInProgress}
+            {data.totalProjectInProgress} In progress
           </p>
         </CardContent>
       </Card>
@@ -23,7 +23,7 @@ const StatsCard = ({ data }: { data: StatsCardProps }) => {
         <CardContent>
           <div className="text-2xl font-bold">{data.totalTasks}</div>
           <p className="text-sm font-medium">
-            Completed: {data.totalTasksCompleted}
+            {data.totalTasksCompleted} Completed
           </p>
         </CardContent>
       </Card>
