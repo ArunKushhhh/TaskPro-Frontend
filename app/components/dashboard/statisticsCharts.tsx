@@ -48,12 +48,6 @@ const StatisticsCharts = ({
   taskPriorityData,
   workspaceProductivityData,
 }: StatisticsChartsProps) => {
-  console.log(stats);
-  console.log(taskTrendsData);
-  console.log(projectStatusData);
-  console.log(taskPriorityData);
-  console.log(workspaceProductivityData);
-
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
       <Card className="lg:col-span-2 hover:translate-y-1 transition-all duration-300">
